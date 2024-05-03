@@ -1,20 +1,22 @@
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 export default function Home() {
   return (
-    <View style={styles.container}>
-      <Text>Hello World!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <Stack.Screen options={{ title: 'Home' }} />
+      <FlatList
+        data={[1, 2, 3, 4, 5]}
+        renderItem={({ item }) => <Text>Item: {item}</Text>}
+        contentContainerStyle={{
+          flex: 1,
+          padding: 20,
+          backgroundColor: '#fafaaa',
+        }}
+      />
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({});
