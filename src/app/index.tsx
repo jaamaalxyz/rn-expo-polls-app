@@ -1,27 +1,31 @@
-import { Link, Stack } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { Link, Stack } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-
-const polls = [
-  {
-    id: 1,
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  },
-  {
-    id: 4,
-  },
-  {
-    id: 5,
-  },
-];
+import { supabase } from '@/lib/supabase';
 
 export default function HomeScreen() {
+  const [polls, setPolls] = useState<
+    { id: number; question: string; options: string[] }[]
+  >([]);
+
+  async function fetchPolls() {
+    const { data, error } = await supabase.from('polls').select('*');
+
+    console.log({ data, error });
+
+    if (error) {
+      console.error(error);
+    } else {
+      setPolls(data);
+    }
+  }
+
+  useEffect(() => {
+    fetchPolls();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -40,8 +44,13 @@ export default function HomeScreen() {
         data={polls}
         contentContainerStyle={styles.listContainer}
         renderItem={({ item }) => (
-          <Link href={`/polls/${item.id}`} style={styles.pollContainer}>
-            <Text style={styles.pollTitle}>{item.id}: poll question</Text>
+          <Link
+            href={{ pathname: `/polls/${item.id}`, params: { poll: item } }}
+            style={styles.pollContainer}
+          >
+            <Text style={styles.pollTitle}>
+              {item.id}: {item.question}
+            </Text>
           </Link>
         )}
       />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
@@ -9,8 +9,12 @@ const poll = {
 };
 
 const PollsDetails = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const [selected, setSelected] = React.useState<string | null>(null);
+  const route = useLocalSearchParams();
+  const { id, poll } = useLocalSearchParams<{
+    id: string;
+    poll: typeof poll;
+  }>();
+  const [selected, setSelected] = useState<string | null>(null);
 
   const handleVote = () => {
     if (selected) {
